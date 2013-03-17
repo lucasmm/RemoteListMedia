@@ -6,6 +6,7 @@ import java.util.List;
 import com.listmedia.classes.TcpClient;
 
 import android.app.ListActivity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.widget.AdapterView;
@@ -13,6 +14,9 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 
 public class AndroidListViewActivity extends ListActivity {
@@ -67,5 +71,27 @@ public class AndroidListViewActivity extends ListActivity {
 			}
 		});
 
+	}
+	
+	public boolean onCreateOptionsMenu(Menu menu) {
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.main, menu);
+		return true;
+	}
+	
+	public boolean onOptionsItemSelected(MenuItem item) {
+	    // Handle item selection
+	    switch (item.getItemId()) {
+	        case R.id.fullscreen:
+	        	TcpClient cl = new TcpClient();
+	    		cl.start("setFullScreenOn");
+	            return true;
+	        case R.id.action_settings:
+	        	Intent intent = new Intent(this, SettingsActivity.class);
+	        	this.startActivity(intent);
+	            return true;
+	        default:
+	            return super.onOptionsItemSelected(item);
+	    }
 	}
 }
