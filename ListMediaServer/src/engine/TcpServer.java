@@ -4,6 +4,7 @@
  */
 package engine;
 
+import java.awt.AWTException;
 import java.awt.Robot;
 import java.awt.event.KeyEvent;
 import java.io.*;
@@ -15,7 +16,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class TcpServer {
-    
+
     private String pathPrincipal;
 
     public void setPathPrincipal(String pathPrincipal) {
@@ -24,7 +25,7 @@ public class TcpServer {
 
     public void start() {
         String mensagem = null;
-        
+
         try {
             ServerSocket ss = new ServerSocket(7000);
             while (true) {
@@ -43,6 +44,10 @@ public class TcpServer {
                     byte[] b = toBytes(walk(pathPrincipal));
                     out.write(b);
                 }
+                
+                if (mensagem.equals("setFullScreenOn")) {
+                    setFullScreen();
+                }
 
                 if (mensagem.equals("..Voltar")) {
                     System.out.println(tempLocal);
@@ -52,7 +57,7 @@ public class TcpServer {
                     for (int i = 0; i < et.length - 1; i++) {
                         result += et[i] + "\\";
                     }
-                    
+
                     tempLocal = result;
 
                     byte[] b = toBytes(walk(tempLocal));
@@ -88,11 +93,11 @@ public class TcpServer {
         File root = new File(path);
         File[] list = root.listFiles();
         System.out.println(path);
-        
+
         if (!path.equals("d:\\series\\")) {
             lista.add("..Voltar");
         }
-        
+
         for (File f : list) {
             if (f.isDirectory()) {
                 lista.add(f.getName());
@@ -108,13 +113,20 @@ public class TcpServer {
         File root = new File(path);
         try {
             Runtime.getRuntime().exec("cmd.exe /c \"" + root.getAbsolutePath() + "\"");
-            Robot robot = new Robot();
-            robot.delay(2000);
+        } catch (IOException ex) {
+            Logger.getLogger(TcpServer.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    private void setFullScreen() {
+        Robot robot;
+        try {
+            robot = new Robot();
             robot.keyPress(KeyEvent.VK_ALT);
             robot.keyPress(KeyEvent.VK_ENTER);
             robot.keyRelease(KeyEvent.VK_ENTER);
             robot.keyRelease(KeyEvent.VK_ALT);
-        } catch (Exception ex) {
+        } catch (AWTException ex) {
             Logger.getLogger(TcpServer.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
