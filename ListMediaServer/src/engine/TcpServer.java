@@ -94,7 +94,7 @@ public class TcpServer {
         File[] list = root.listFiles();
         System.out.println(path);
 
-        if (!path.equals("d:\\series\\")) {
+        if (!path.equals(pathPrincipal)) {
             lista.add("..Voltar");
         }
 
