@@ -4,32 +4,25 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
-import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectInputStream;
 import java.net.Socket;
-import java.net.UnknownHostException;
 import java.util.List;
 
 public class TcpClient {
 
-	private Socket socket;
+	static String ip = null;
 
-	public boolean conexao() {
-
-		try {
-			socket = new Socket("10.0.0.100", 7000);
-			return true;
-		} catch (UnknownHostException e) {
-			e.printStackTrace();
-			return false;
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return false;
-		}
-
-	}
+//	public Socket conexao() {
+//		ip = "10.0.0.100";
+//		Socket socket = null;
+//		try {
+//			socket = new Socket(ip, 7000);
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+//		return socket;
+//	}
 
 	public List<String> start(String acao) {
 		DataOutputStream out;
@@ -37,8 +30,8 @@ public class TcpClient {
 		List<String> lista = null;
 
 		try {
-			
-			socket = new Socket("10.0.0.100", 7000);
+
+			Socket socket = Conexao.getConexao();
 
 			out = new DataOutputStream(socket.getOutputStream());
 			out.writeUTF(acao);
@@ -53,11 +46,11 @@ public class TcpClient {
 			while ((nRead = in.read(data, 0, data.length)) != -1) {
 				buffer.write(data, 0, nRead);
 			}
-			
+
 			buffer.flush();
-			
+
 			lista = toList(buffer.toByteArray());
-			
+
 			// out.close();
 			// in.close();
 			// socket.close();
